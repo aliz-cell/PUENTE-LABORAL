@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%92%BC%3C/text%3E%3C/svg%3E">
+<title>Puente Laboral – Registro y CV</title>
+<style>
+:root{
+  --verde:#1abc78; --turquesa:#17a2b8; --azul:#4fb3e8; --amarillo:#ffd966; --marino:#1b2a4a;
+  --bg:#f3f9f8; --card:#ffffff; --text:var(--marino); --borde:#d7e2ea;
+  box-sizing:border-box; padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){--bg:#0f1720;--card:#182233;--text:#e8eef5;--borde:#2b3a4e;}
+}
+:root[data-theme="dark"]{--bg:#0f1720;--card:#182233;--text:#e8eef5;--borde:#2b3a4e;}
+*{box-sizing:inherit}
+html,body{height:100%;margin:0}
+body{background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);background:var(--card);z-index:20}
+header{position:sticky;top:env(safe-area-inset-top,0px);background:var(--card);box-shadow:0 2px 8px rgba(0,0,0,.08);padding:14px 16px;text-align:center;z-index:10}
+header h1{font-size:18px;margin:6px 0 0;color:var(--marino)}
+header p{margin:2px 0 0;font-size:12px;color:var(--turquesa);font-weight:700;letter-spacing:.4px}
+header small{display:block;font-size:11px;color:var(--text);opacity:.75;margin-top:2px}
+.progress{height:8px;background:var(--borde);border-radius:4px;margin:14px 16px}
+.progress .bar{height:100%;width:20%;background:var(--turquesa);border-radius:4px;transition:width .25s}
+main{max-width:520px;margin:0 auto;padding:4px 16px 100px}
+.step{display:none}
+.step.active{display:block}
+.step h2{font-size:16px;color:var(--marino);margin-bottom:12px}
+.field{margin-bottom:14px}
+label{display:block;font-weight:600;font-size:14px;margin-bottom:5px}
+input,select,textarea{width:100%;padding:11px;border-radius:10px;border:1px solid var(--borde);background:var(--card);color:var(--text);font-size:16px}
+textarea{resize:vertical;min-height:70px}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{display:flex;align-items:center;gap:6px;border:1px solid var(--borde);border-radius:999px;padding:8px 12px;font-size:13px;background:var(--card)}
+.chip input{width:auto}
+.hint{font-size:12px;opacity:.7;margin-top:4px}
+.navbar{position:fixed;left:0;right:0;bottom:0;padding:10px 16px calc(10px + env(safe-area-inset-bottom,0px));background:var(--card);box-shadow:0 -2px 8px rgba(0,0,0,.08);display:flex;gap:10px;max-width:520px;margin:0 auto}
+.btn{flex:1;padding:13px;border:none;border-radius:12px;font-weight:700;font-size:15px;cursor:pointer}
+.btn-primary{background:var(--verde);color:#fff}
+.btn-secondary{background:transparent;border:2px solid var(--azul);color:var(--azul)}
+.btn-whatsapp{background:#25D366;color:#fff}
+.btn-outline{background:transparent;border:2px solid var(--turquesa);color:var(--turquesa)}
+.block{display:block;width:100%;margin-top:10px}
+.cv-card{background:var(--card);border:1px solid var(--borde);border-radius:14px;padding:16px;margin-bottom:14px}
+.cv-card h3{margin:0 0 6px;color:var(--marino)}
+.cv-row{font-size:14px;margin:4px 0}
+.ok-box{background:#e9f9f0;border:1px solid var(--verde);border-radius:12px;padding:14px;text-align:center;margin-top:14px}
+#cv{display:none}
+@media print{
+  body>*:not(#cv){display:none!important}
+  #cv{display:block!important}
+}
+</style>
+</head>
+<body>
+<header>
+  <div style="font-size:30px">💼</div>
+  <h1>PUENTE LABORAL</h1>
+  <p>LA PAZ · EL ALTO · BOLIVIA</p>
+  <small>Conectamos talento con oportunidades.</small>
+</header>
+<div class="progress"><div class="bar" id="bar"></div></div>
+
+<main>
+  <section class="step active" data-step="1">
+    <h2>Paso 1 · Datos personales</h2>
+    <div class="field"><label>Nombres</label><input id="nombres"></div>
+    <div class="field"><label>Apellidos</label><input id="apellidos"></div>
+    <div class="field"><label>Celular / WhatsApp</label><input id="celular" type="tel" placeholder="Ej: 700 00000"></div>
+    <div class="field"><label>Ciudad</label>
+      <select id="ciudad"><option value="">Selecciona</option><option>La Paz</option><option>El Alto</option></select>
+    </div>
+    <div class="field"><label>Zona o barrio</label><input id="zona"></div>
+    <div class="field"><label>Foto de perfil</label>
+      <input id="foto" type="file" accept="image/*" capture="user">
+      <div class="hint">Puedes tomarla con la cámara o subirla de tu galería.</div>
+      <img id="fotoPreview" style="max-width:90px;border-radius:10px;margin-top:8px;display:none">
+    </div>
+  </section>
+
+  <section class="step" data-step="2">
+    <h2>Paso 2 · ¿Qué trabajo buscas?</h2>
+    <div class="field"><label>Rubro</label>
+      <div class="chips">
+        <label class="chip"><input type="checkbox" name="rubro" value="Seguridad">Seguridad</label>
+        <label class="chip"><input type="checkbox" name="rubro" value="Limpieza">Limpieza</label>
+        <label class="chip"><input type="checkbox" name="rubro" value="Construcción">Construcción</label>
+        <label class="chip"><input type="checkbox" name="rubro" value="Ventas">Ventas/Comercio</label>
+        <label class="chip"><input type="checkbox" name="rubro" value="Atención al cliente">Atención al cliente</label>
+        <label class="chip"><input type="checkbox" name="rubro" value="Restaurantes">Restaurantes</label>
+        <label class="chip"><input type="checkbox" name="rubro" value="Transporte">Transporte/Conducción</label>
+        <label class="chip"><input type="checkbox" name="rubro" value="Almacén/Carga">Almacén/Carga</label>
+        <label class="chip"><input type="checkbox" name="rubro" value="Oficina">Oficina/Administración</label>
+        <label class="chip"><input type="checkbox" name="rubro" value="Otro">Otro</label>
+      </div>
+    </div>
+    <div class="field"><label>¿Qué cargo buscas?</label><input id="cargo"></div>
+    <div class="field"><label>Disponibilidad</label>
+      <select id="disponibilidad"><option value="">Selecciona</option><option>Inmediata</option><option>En unos días</option></select>
+    </div>
+    <div class="field"><label>Jornada</label>
+      <select id="jornada"><option value="">Selecciona</option><option>Tiempo completo</option><option>Medio tiempo</option><option>Temporal</option></select>
+    </div>
+  </section>
+
+  <section class="step" data-step="3">
+    <h2>Paso 3 · Experiencia y estudios</h2>
+    <div class="field"><label>¿Tienes experiencia laboral?</label>
+      <select id="experiencia">
+        <option value="">Selecciona</option>
+        <option>Sí, tengo experiencia</option>
+        <option>No, busco mi primer empleo</option>
+        <option>Tengo conocimientos, no experiencia formal</option>
+        <option>Trabajo por cuenta propia</option>
+      </select>
+    </div>
+    <div class="field"><label>Cuéntanos brevemente (empresa, cargo, tiempo)</label><textarea id="expDetalle"></textarea></div>
+    <div class="field"><label>Estudios</label>
+      <select id="estudios">
+        <option value="">Selecciona</option>
+        <option>Sin estudios formales</option><option>Primaria</option><option>Secundaria</option>
+        <option>Bachiller</option><option>Técnico</option><option>Técnico superior</option>
+        <option>Universidad / Licenciatura</option><option>Otros</option>
+      </select>
+    </div>
+  </section>
+
+  <section class="step" data-step="4">
+    <h2>Paso 4 · Habilidades</h2>
+    <div class="chips">
+      <label class="chip"><input type="checkbox" name="hab" value="Puntualidad">Puntualidad</label>
+      <label class="chip"><input type="checkbox" name="hab" value="Responsabilidad">Responsabilidad</label>
+      <label class="chip"><input type="checkbox" name="hab" value="Honestidad">Honestidad</label>
+      <label class="chip"><input type="checkbox" name="hab" value="Trabajo en equipo">Trabajo en equipo</label>
+      <label class="chip"><input type="checkbox" name="hab" value="Manejo de herramientas">Manejo de herramientas</label>
+      <label class="chip"><input type="checkbox" name="hab" value="Conducción">Conducción</label>
+      <label class="chip"><input type="checkbox" name="hab" value="Conocimientos informáticos">Informática</label>
+    </div>
+    <div class="field" style="margin-top:12px"><label>¿Qué más sabes hacer?</label><textarea id="habLibre"></textarea></div>
+  </section>
+
+  <section class="step" data-step="5">
+    <h2>Paso 5 · Revisión y tu CV</h2>
+    <div class="cv-card" id="resumen"></div>
+    <button class="btn btn-primary block" onclick="descargarCV()">⬇️ Descargar mi currículum</button>
+    <button class="btn btn-whatsapp block" onclick="compartirWhatsApp()">📤 Compartir por WhatsApp</button>
+    <button class="btn btn-outline block" onclick="enviarAdmin()">💬 Enviar mi registro a Puente Laboral</button>
+    <button class="btn btn-secondary block" onclick="finalizar()">✅ Finalizar mi registro</button>
+    <div class="ok-box" id="okBox" hidden>
+      <strong>¡FELICIDADES!</strong><br>Tu hoja de vida ya forma parte de PUENTE LABORAL.<br>Gracias por confiar en nosotros.
+    </div>
+  </section>
+</main>
+
+<div class="navbar">
+  <button class="btn btn-secondary" id="backBtn" onclick="cambiarPaso(-1)">Atrás</button>
+  <button class="btn btn-primary" id="nextBtn" onclick="cambiarPaso(1)">Siguiente</button>
+</div>
+
+<div id="cv">
+  <div style="padding:24px;font-family:system-ui,sans-serif;color:#1b2a4a">
+    <div style="font-size:22px;font-weight:800">💼 PUENTE LABORAL</div>
+    <div style="font-size:11px;color:#17a2b8;font-weight:700">LA PAZ · EL ALTO · BOLIVIA</div>
+    <hr>
+    <div id="cvBody"></div>
+  </div>
+</div>
+
+<script>
+const ADMIN_WHATSAPP = "59100000000"; // TODO: reemplazar por el número real del administrador
+let paso = 1;
+const total = 5;
+const KEY = "pl_draft";
+let data = JSON.parse(localStorage.getItem(KEY) || "{}");
+
+function restaurar(){
+  for (const id of ["nombres","apellidos","celular","ciudad","zona","cargo","disponibilidad","jornada","experiencia","expDetalle","estudios","habLibre"]){
+    const el = document.getElementById(id);
+    if (el && data[id]) el.value = data[id];
+  }
+  document.querySelectorAll('input[name="rubro"]').forEach(c=>{ if((data.rubro||[]).includes(c.value)) c.checked=true; });
+  document.querySelectorAll('input[name="hab"]').forEach(c=>{ if((data.hab||[]).includes(c.value)) c.checked=true; });
+}
+
+function recolectar(){
+  for (const id of ["nombres","apellidos","celular","ciudad","zona","cargo","disponibilidad","jornada","experiencia","expDetalle","estudios","habLibre"]){
+    const el = document.getElementById(id);
+    if (el) data[id] = el.value;
+  }
+  data.rubro = [...document.querySelectorAll('input[name="rubro"]:checked')].map(c=>c.value);
+  data.hab = [...document.querySelectorAll('input[name="hab"]:checked')].map(c=>c.value);
+  localStorage.setItem(KEY, JSON.stringify(data));
+}
+
+function mostrarPaso(){
+  document.querySelectorAll(".step").forEach(s=> s.classList.toggle("active", +s.dataset.step === paso));
+  document.getElementById("bar").style.width = (paso/total*100)+"%";
+  document.getElementById("backBtn").style.visibility = paso===1 ? "hidden" : "visible";
+  document.getElementById("nextBtn").textContent = paso===total ? "Listo" : "Siguiente";
+  document.getElementById("nextBtn").style.display = paso===total ? "none" : "block";
+  if (paso===total) construirResumen();
+}
+
+function cambiarPaso(dir){
+  recolectar();
+  if (dir>0 && paso===1 && (!data.nombres || !data.celular)){
+    alert("Por favor completa al menos tu nombre y celular.");
+    return;
+  }
+  paso = Math.min(total, Math.max(1, paso+dir));
+  mostrarPaso();
+}
+
+function construirResumen(){
+  const r = document.getElementById("resumen");
+  r.innerHTML = `
+    <h3>${data.nombres||""} ${data.apellidos||""}</h3>
+    <div class="cv-row">📍 ${data.ciudad||""} ${data.zona? "- "+data.zona:""}</div>
+    <div class="cv-row">📱 ${data.celular||""}</div>
+    <div class="cv-row">💼 Busca: ${data.cargo || (data.rubro||[]).join(", ") || "Oportunidad laboral"}</div>
+    <div class="cv-row">🎓 ${data.estudios||"No especificado"}</div>
+    <div class="cv-row">🛠️ ${(data.hab||[]).join(", ") || "—"}</div>
+  `;
+}
+
+function construirCV(){
+  document.getElementById("cvBody").innerHTML = `
+    <h2 style="margin-bottom:4px">${data.nombres||""} ${data.apellidos||""}</h2>
+    <p>📍 ${data.ciudad||""} ${data.zona? "- "+data.zona:""} &nbsp;|&nbsp; 📱 ${data.celular||""}</p>
+    <h4>Busca</h4><p>${data.cargo || (data.rubro||[]).join(", ") || "Oportunidad laboral"} · ${data.jornada||""} · Disponibilidad: ${data.disponibilidad||""}</p>
+    <h4>Experiencia</h4><p>${data.experiencia||""}${data.expDetalle? " — "+data.expDetalle:""}</p>
+    <h4>Estudios</h4><p>${data.estudios||"No especificado"}</p>
+    <h4>Habilidades</h4><p>${(data.hab||[]).join(", ") || "—"}${data.habLibre? " · "+data.habLibre:""}</p>
+  `;
+}
+
+function descargarCV(){
+  recolectar(); construirCV();
+  window.print();
+}
+
+function compartirWhatsApp(){
+  recolectar();
+  const texto = encodeURIComponent(`Mi CV - ${data.nombres||""} ${data.apellidos||""}\nCiudad: ${data.ciudad||""}\nBusco: ${data.cargo || (data.rubro||[]).join(", ")}\nTel: ${data.celular||""}`);
+  window.open(`https://wa.me/?text=${texto}`, "_blank");
+}
+
+function enviarAdmin(){
+  recolectar();
+  const texto = encodeURIComponent(`Hola, encontré PUENTE LABORAL y estoy interesado en buscar una oportunidad de trabajo. Mi nombre es ${data.nombres||""} ${data.apellidos||""} y vivo en ${data.ciudad||""}.`);
+  window.open(`https://wa.me/${ADMIN_WHATSAPP}?text=${texto}`, "_blank");
+}
+
+function finalizar(){
+  recolectar();
+  document.getElementById("okBox").hidden = false;
+}
+
+document.getElementById("foto").addEventListener("change", e=>{
+  const f = e.target.files[0];
+  if (!f) return;
+  const reader = new FileReader();
+  reader.onload = ev=>{
+    const img = document.getElementById("fotoPreview");
+    img.src = ev.target.result; img.style.display = "block";
+  };
+  reader.readAsDataURL(f);
+});
+
+restaurar();
+mostrarPaso();
+</script>
+</body>
+</html>
